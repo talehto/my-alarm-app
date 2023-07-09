@@ -24,9 +24,14 @@ This chapter contains instructions how this project has been created.
 ### Server side
 Server uses Nodejs + Express + Typescript + MongoDB stack.
 https://blog.logrocket.com/how-to-set-up-node-typescript-express/ 
+
 https://www.youtube.com/watch?v=Ne0tLHm1juE&ab_channel=ZachGollwitzer
+
 https://github.com/zachgoll/express-jwt-authentication-starter
+
 https://www.youtube.com/watch?v=Gwru3BueuiE&ab_channel=NathanielWoodbury
+
+https://github.com/jerrychong25/node-express-mongo-passport-jwt-typescript
 
 ```
 $ cd server
