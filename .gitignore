@@ -25,9 +25,11 @@ yarn-error.log*
 # server 
 /server/.env
 /server/*.pem
-/server/node_modules
-/server/package-lock.json
+package-lock.json
+node_modules
 /server/dist/
 
 # client
 /client/node_modules
+
+

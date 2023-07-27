@@ -8,8 +8,28 @@ const LocalStrategy = passportLocal.Strategy
 const JwtStrategy = passportJwt.Strategy
 const ExtractJwt = passportJwt.ExtractJwt
 
-passport.use(
-  new LocalStrategy({ usernameField: 'username' }, async (username, password, done) => {
+passport.use('register',
+  new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, async (username, password, done) => {
+    try{
+      const user = await User.findByUsername(username)
+      if(user){
+        return done(undefined, false, { message: `username ${username} already exists.` })
+      }
+      
+      const newUser = User.create({
+        username: username,
+        password: password
+      })
+
+      return done(null, user)
+    }catch(err){
+      return done(err)
+    }    
+  })
+)
+
+passport.use('login',
+  new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, async (username, password, done) => {
     try{
       const user = await User.findByUsername(username)
       if(!user){
@@ -28,7 +48,7 @@ passport.use(
   })
 )
 
-passport.use(
+passport.use('jwt',
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
