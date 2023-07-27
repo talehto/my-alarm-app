@@ -4,7 +4,7 @@ export interface MongoDbConnectionParams {
   // Mongodb RRI.
   // E.g. mongodb://localhost:27017/my-alarm-app
   uri: string,
-  // Mongoone connction options.
+  // Mongoose connction options.
   //E.g.
   //{
   //  keepAlive: true,
