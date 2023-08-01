@@ -23,6 +23,10 @@ userSchema.pre<IUserDocument>('save', async function save(next) {
   const user = this
 
   try{
+    //Password hashing is done only if password has been changed.
+    if(!this.isModified("password")){
+      return next();
+    }
     const hashedPassword = await bcrypt.hash(this.password, 10);
     user.password = hashedPassword
     return next()

@@ -1,13 +1,12 @@
 import { Router } from 'express'
 import passport from 'passport'
 import * as jwt from 'jsonwebtoken'
-//import { AuthUserController } from '../controllers/authUserController'
 import config from "../config/config";
+import { User } from '../db/mongodb/models/userModel'
 
 export class AuthUserRoutes {
 
   router: Router
-  //public authUserController: AuthUserController = new AuthUserController(config.JWT_SECRET)
 
   constructor() {
     this.router = Router()
@@ -19,58 +18,66 @@ export class AuthUserRoutes {
   }
 
   private routes(): void {
-    this.router.post('/register',
-    //TODO: Is failureRedirect option needed. 
-      passport.authenticate('register', { session: false }),
-        async (req, res, next) => {
-          res.json({
-            message: "Signup successful",
-            user: req.user
-          })
-        }
-      );
     
-      // We have a custom callback in the login route. Custom callback
-      // creates a secure token.
-      this.router.post('/login', 
-        async (req, res, next) => {
-          passport.authenticate(
-            'login',
-            async (err: any, user: any, info: any) => {
-              try {
-                if (err || !user) {
-                  const error = new Error('login, An error occurred: ' + err);
-                  return next(error);
-                }
+    this.router.post('/register', async (req, res) => {
+      console.log("register router called")
+      try{
+        const { username, password } = req.body;
+        const user = await User.findByUsername(username)
+        if(user){
+          res.status(400).send(`username ${username} already exists.`);
+          return;
+        }
 
-                req.login(
-                  user,
-                  { session: false },
-                  async (error) => {
-                    if (error) return next(error);
+        const newUser = User.create({
+          username: username,
+          password: password
+        })
 
-                    //TODO: Add algorithm and expiresIn to config parameters.
-                    const token = jwt.sign({ username: user.username }, config.JWT_SECRET, {
-                      algorithm: 'HS256',
-                      expiresIn: '60s' // if ommited, the token will not expire
-                      } );
-                    return res.json({ token });
-                  }
-                );
-              } catch (error) {
-                console.log("login, error occurred")
+        res.status(200).send(`User ${username} has been created successfully.`);
+      }catch(err){
+        res.status(500).send("Unexpected error in the login: " + err);
+      }
+    });
+    
+    // We have a custom callback in the login route. Custom callback
+    // creates a secure token.
+    this.router.post('/login', 
+      async (req, res, next) => {
+        passport.authenticate(
+          'login',
+          async (err: any, user: any, info: any) => {
+            try {
+              if (err || !user) {
+                const error = new Error('login, An error occurred: ' + err);
                 return next(error);
               }
-            }
-          )(req, res, next);
-        }
-      );
 
-      this.router.get('/user',
-        passport.authenticate('jwt', { session: false }), 
-          (req, res, next) => {
-            res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!" });
-        }
-      );
+              req.login( user, { session: false }, async (error) => {
+                  if (error) return next(error);
+
+                  const token = jwt.sign({ username: user.username }, config.JWT_SECRET, {
+                    algorithm: 'HS256',
+                    expiresIn: config.JWT_EXPIRES_TIME  // if ommited, the token will not expire
+                    } );
+                  return res.json({ token });
+                }
+              );
+            } catch (error) {
+              console.log("login, error occurred")
+              return next(error);
+            }
+          }
+        )
+        (req, res, next);
+      }
+    );
+
+    this.router.get('/user',
+      passport.authenticate('jwt', { session: false }), 
+        (req, res, next) => {
+          res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!" });
+      }
+    );
   }
-}
+} 
