@@ -11,6 +11,7 @@ const ExtractJwt = passportJwt.ExtractJwt
 passport.use('register',
   new LocalStrategy({ usernameField: 'username', passwordField: 'password' }, async (username, password, done) => {
     try{
+      console.log("register LocalStrategy called")
       const user = await User.findByUsername(username)
       if(user){
         return done(undefined, false, { message: `username ${username} already exists.` })
@@ -23,6 +24,7 @@ passport.use('register',
 
       return done(null, user)
     }catch(err){
+      console.log("register LocalStrategy catch block")
       return done(err)
     }    
   })
@@ -36,13 +38,18 @@ passport.use('login',
         return done(undefined, false, { message: `username ${username} is not found.` })
       }
       
-      if(!user.checkPassword(password)){
+      console.log("passport-init login: " + user)
+      const retValue = await user.checkPassword(password)
+      console.log("passport-init login, retValue: " + retValue);
+      if(!retValue){
         return done(undefined, false, { message: 'Invalid username or password.' })
       }else{
         //Successful case.
+        console.log("passport-init login successful case");
         return done(undefined, user)
       }
     }catch(err){
+      console.log("passport-init login, error caught " + err);
       return done(err)
     }    
   })
@@ -53,6 +60,7 @@ passport.use('jwt',
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: config.JWT_SECRET,
+      algorithms: ["HS256"],
     },
     async function (jwtToken, done) {
       try{

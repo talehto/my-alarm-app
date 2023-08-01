@@ -85,6 +85,7 @@ npm run build
 
 Running server in the development mode:
 ```
+cp .env ./dist/
 npm run dev
 ```
 

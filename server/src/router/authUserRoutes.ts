@@ -36,10 +36,10 @@ export class AuthUserRoutes {
         async (req, res, next) => {
           passport.authenticate(
             'login',
-            async (err, user, info) => {
+            async (err: any, user: any, info: any) => {
               try {
                 if (err || !user) {
-                  const error = new Error('An error occurred.');
+                  const error = new Error('login, An error occurred: ' + err);
                   return next(error);
                 }
 
@@ -48,12 +48,17 @@ export class AuthUserRoutes {
                   { session: false },
                   async (error) => {
                     if (error) return next(error);
-      
-                    const token = jwt.sign({ username: user.username }, config.JWT_SECRET);
+
+                    //TODO: Add algorithm and expiresIn to config parameters.
+                    const token = jwt.sign({ username: user.username }, config.JWT_SECRET, {
+                      algorithm: 'HS256',
+                      expiresIn: '60s' // if ommited, the token will not expire
+                      } );
                     return res.json({ token });
                   }
                 );
               } catch (error) {
+                console.log("login, error occurred")
                 return next(error);
               }
             }

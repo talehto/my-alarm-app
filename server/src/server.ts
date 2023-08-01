@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-//import passport from 'passport';
-//import passportJwt from 'passport-jwt';
+import passport from 'passport';
+// This is needed for an initialization of the passport.
+const passportSetup = require("./passport/passport-init");
 // Needed to handle HTTP POST requests in Express.
-import bodyParser from 'body-parser';
+//import bodyParser from 'body-parser';
 import compression from 'compression';
 import config from "./config/config";
 import {MongoDbConnectionParams, MongoDbConnection} from "./db/mongodb/mongoDbConnection"
@@ -21,8 +22,11 @@ class Server {
 
   private config(): void {
     this.app.set('port', config.SERVER_PORT || 8080)
+    //TODO: Enabling compression, for some reason, causes that
+    // all requests is left for a pending state. 
     // Compression decreases size of http bodies.
-    this.app.use(compression)
+    //this.app.use(compression)
+    //TODO: Check whether this is needed
     this.app.use(cors({ credentials: true }) )
     this.app.use(express.json())
     // TODO: Check whether extended values should be true or false.
@@ -30,8 +34,15 @@ class Server {
   }
 
   private routes(): void {
+    this.app.use(passport.initialize());
+
     let routeObj = new AuthUserRoutes();
     this.app.use("/", routeObj.getRouter());
+    this.app.get("/huhuu", (req, res) => {
+      console.log("here we go")  
+      res.send("Hello 2")
+    })
+    console.log("routes added")
   }
 
   private openMongoDbConnection() {

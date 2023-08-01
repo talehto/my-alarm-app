@@ -16,7 +16,7 @@ interface IUserModel extends Model<IUserDocument> {
 
 export const userSchema: Schema<IUserDocument> = new Schema<IUserDocument>({
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false },
+  password: { type: String, required: true, select: true },
 })
 
 userSchema.pre<IUserDocument>('save', async function save(next) {
@@ -34,6 +34,8 @@ userSchema.pre<IUserDocument>('save', async function save(next) {
 })
 
 userSchema.methods.checkPassword = async function checkPassword(candidatePassword: string): Promise<boolean> {
+  console.log("checkPassword: candidatePassword: " + candidatePassword)
+  console.log("checkPassword: hashed password: " + this.password)
   const result = await bcrypt.compare(candidatePassword, this.password);
   return result;
 }
