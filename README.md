@@ -91,17 +91,17 @@ npm run dev
 
 ## Testing registration
 ```
-curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/register
+curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/auth/register
 ```
 
 ## Testing login
 ```
-curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/login
+curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/auth/login
 ```
 
 ## Testing protectes route
-[!NOTE]
+**Note**  
 Copy jwt token from response of the login request into Authorization header. 
 ```
-curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFAZSIsImlhdCI6MTY5MDkyMTY1NCwiZXhwIjoxNjkwOTIxNzE0fQ.O0gIbdLteHEuKdllcD27g9LXcToBmhmH3biFRCsWgaU" http://localhost:3000/user
+curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFAZSIsImlhdCI6MTY5MDkyMTY1NCwiZXhwIjoxNjkwOTIxNzE0fQ.O0gIbdLteHEuKdllcD27g9LXcToBmhmH3biFRCsWgaU" http://localhost:3000/user/test
 ```

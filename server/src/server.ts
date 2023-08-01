@@ -9,6 +9,7 @@ import compression from 'compression';
 import config from "./config/config";
 import {MongoDbConnectionParams, MongoDbConnection} from "./db/mongodb/mongoDbConnection"
 import { AuthUserRoutes } from './router/authUserRoutes'
+import { SecureUserRoutes } from './router/secureUserRoutes'
 
 class Server {
   public app: express.Application
@@ -36,12 +37,15 @@ class Server {
   private routes(): void {
     this.app.use(passport.initialize());
 
-    let routeObj = new AuthUserRoutes();
-    this.app.use("/", routeObj.getRouter());
-    this.app.get("/huhuu", (req, res) => {
-      console.log("here we go")  
-      res.send("Hello 2")
-    })
+    let authRouteObj = new AuthUserRoutes();
+    let secureRouteObj = new SecureUserRoutes();
+    this.app.use("/auth", authRouteObj.getRouter());
+    this.app.use("/user", secureRouteObj.getRouter());
+
+    // this.app.get("/huhuu", (req, res) => {
+    //   console.log("here we go")  
+    //   res.send("Hello 2")
+    // })
     console.log("routes added")
   }
 

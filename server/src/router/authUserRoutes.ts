@@ -58,7 +58,7 @@ export class AuthUserRoutes {
 
                   const token = jwt.sign({ username: user.username }, config.JWT_SECRET, {
                     algorithm: 'HS256',
-                    expiresIn: config.JWT_EXPIRES_TIME  // if ommited, the token will not expire
+                    expiresIn: config.JWT_EXPIRES_TIME
                     } );
                   return res.json({ token });
                 }
@@ -73,11 +73,11 @@ export class AuthUserRoutes {
       }
     );
 
-    this.router.get('/user',
-      passport.authenticate('jwt', { session: false }), 
-        (req, res, next) => {
-          res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!" });
-      }
-    );
+    // this.router.get('/user',
+    //   passport.authenticate('jwt', { session: false }), 
+    //     (req, res, next) => {
+    //       res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!" });
+    //   }
+    // );
   }
 } 
