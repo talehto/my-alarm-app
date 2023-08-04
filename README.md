@@ -91,7 +91,7 @@ npm run dev
 
 ## Testing registration
 ```
-curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/auth/register
+curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/auth/signup
 ```
 
 ## Testing login

@@ -33,6 +33,7 @@ export class SecureUserRoutes {
       (req, res, next);
     })
 
+    //This is a user/test route.
     this.router.get("/test", (req, res, next) => {
       res.status(200).json({ success: true, msg: "You are successfully in the user/test route!" });
     })
