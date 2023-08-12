@@ -16,14 +16,18 @@ interface ENV {
   SERVER_PORT: number | undefined;
   MONGO_URI: string | undefined;
   JWT_SECRET: string | undefined;
+  JWT_REFRESH_TOKEN_SECRET: string | undefined;
   JWT_EXPIRES_TIME: string | undefined;
+  JWT_REFRESH_TOKEN_EXPIRES_TIME: string | undefined;
 }
 
 interface Config {
   SERVER_PORT: number;
   MONGO_URI: string;
   JWT_SECRET: string;
+  JWT_REFRESH_TOKEN_SECRET: string;
   JWT_EXPIRES_TIME: string;
+  JWT_REFRESH_TOKEN_EXPIRES_TIME: string;
 }
 
 // Loading process.env as ENV interface
@@ -33,7 +37,9 @@ const getConfig = (): ENV => {
     SERVER_PORT: process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : undefined,
     MONGO_URI: process.env.MONGO_URI,
     JWT_SECRET: process.env.JWT_SECRET,
+    JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
     JWT_EXPIRES_TIME: process.env.JWT_EXPIRES_TIME,
+    JWT_REFRESH_TOKEN_EXPIRES_TIME: process.env.JWT_REFRESH_TOKEN_EXPIRES_TIME
   };
 };
 

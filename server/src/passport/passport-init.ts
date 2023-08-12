@@ -1,7 +1,8 @@
 import passport from 'passport'
 import passportLocal from 'passport-local'
 import passportJwt from 'passport-jwt'
-import { User } from '../db/mongodb/models/userModel'
+import { User, IUserDocument, IUser } from '../db/mongodb/models/userModel'
+import { RefreshToken, IRefreshToken } from '../db/mongodb/models/refreshTokenModel'
 import config from "../config/config";
 
 const LocalStrategy = passportLocal.Strategy
@@ -11,7 +12,7 @@ const ExtractJwt = passportJwt.ExtractJwt
 passport.use('login',
   new LocalStrategy({ usernameField: 'username', passwordField: 'password', session: false }, async (username, password, done) => {
     try{
-      const user = await User.findByUsername(username)
+      const user: IUserDocument = await User.findByUsername(username)
       if(!user){
         return done(undefined, false, { message: `username ${username} is not found.` })
       }
@@ -42,7 +43,29 @@ passport.use('jwt',
     },
     async function (jwtToken, done) {
       try{
-        const user = await User.findByUsername(jwtToken.username)
+        const user: IUser = await User.findByUsername(jwtToken.username)
+        if (user) {
+          return done(undefined, user, jwtToken)
+        } else {
+          return done(undefined, false)
+        }
+      }catch(err){
+        return done(err, false)
+      }
+    }
+  )
+)
+
+passport.use('jwt-refresh',
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: config.JWT_REFRESH_TOKEN_SECRET,
+      algorithms: ['HS256'],
+    },
+    async function (jwtToken, done) {
+      try{
+        const user: IRefreshToken = await RefreshToken.findTokenByUsername(jwtToken.username)
         if (user) {
           return done(undefined, user, jwtToken)
         } else {

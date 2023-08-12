@@ -99,7 +99,14 @@ curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"pas
 curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"a@e\",\"password\":\"p1\"}" http://localhost:3000/auth/login
 ```
 
-## Testing protectes route
+## Testing refresh token
+**Note**  
+Copy jwt refresh token from response of the login request into Authorization header. 
+```
+curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFAYyIsImlhdCI6MTY5MTg0NjkxMiwiZXhwIjoxNjkxODUwNTEyfQ.1zUZmonZwAYAVad2iE5XFriSm6eHsSMbbU79mVGgDbo" http://localhost:3000/auth/refresh
+```
+
+## Testing protected route
 **Note**  
 Copy jwt token from response of the login request into Authorization header. 
 ```

@@ -24,7 +24,8 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "rand-token": "^1.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

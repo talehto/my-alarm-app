@@ -11,7 +11,7 @@ interface IRefreshTokenModel extends Model<IRefreshToken> {
 
 export const refreshTokenSchema: Schema<IRefreshToken> = 
   new Schema<IRefreshToken>({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true, select: true },
   token: { type: String, required: true, select: true },
 })
 
@@ -19,4 +19,4 @@ refreshTokenSchema.statics.findTokenByUsername = async function (username: strin
   return await this.findOne({ username });
 };
 
-export const User = model<IRefreshToken, IRefreshTokenModel>('RefreshToken', refreshTokenSchema)
+export const RefreshToken = model<IRefreshToken, IRefreshTokenModel>('RefreshToken', refreshTokenSchema)

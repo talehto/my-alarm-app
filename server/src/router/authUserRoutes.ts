@@ -20,5 +20,6 @@ export class AuthUserRoutes {
     
     this.router.post('/login', AuthUserController.loginUser);
 
+    this.router.post('/refresh', AuthUserController.refreshToken);
   }
 } 
